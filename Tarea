@@ -1,0 +1,52 @@
+
+
+Dashboard:
+CRUD de usuario
+id, Nombre, Apellido, Email, Telefono, Role(admin, client), Status(active, disabled), fecha de creacion
+
+Crud de productos
+id, nombre,descripcion, categoria,  precio, cantindad disponible, fecha de creacion, imagen(imagenBase64, ImagenUrl)
+
+Crud Ordernes
+id, user:{id, Nombre, Apellido}, producto:{id, Nombre}, monto, cantindad, fecha de creacion
+
+
+
+Extras:
+Agregar imagen al producto.
+
+
+
+Admin:
+vista:
+Auth: Login
+
+Cliente:
+   - Vista: Crearte / Editar / Eliminar, Listarlo
+
+Producto:
+   Vista Listado: -Boton de agregar y Boton de editar  /  Vista: Eliminar
+   Vista: Agregar
+   Vista: Editar
+   Vista: Ver producto
+
+Ordenes:
+   Vista: Listado
+   Vista: detalle
+
+
+
+
+Client:
+Auth: Login / Register
+
+vista:
+
+Producto:
+   Vista: Listado
+   Vista: Ver producto y comprar
+
+
+Ordenes (Mostrar por id de usuario):
+   Vista: Listado
+   Vista: detalle
