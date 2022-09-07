@@ -4,8 +4,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 //Firebase
-// import firebaseApp from "../../../../firebase/firebaseConfig";
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { db, auth } from "../../../../firebase/firebaseConfig";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { collection, addDoc, setDoc, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -33,23 +34,62 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 // const auth = getAuth(firebaseApp);
 
 function Basic() {
-  // const navigate = useNavigate();
-  // const [email, setEmail]=React.useState('')
-  // const [password, setPassword]=React.useState('')
 
-  // const handleSubmit = async () => {
-  //   try {
-  //       await signInWithEmailAndPassword(auth, email, password);
-  //       // navigate('/dashboards/analytics')
-  //   }catch (e){
-  //      window.alert('Error al iniciar session')
+  const [email, setEmail] = React.useState("jansihdez@gmail.com");
+  const [password, setPassword] = React.useState("123456");
 
-  //   }
-  // };
+  React.useEffect(() => {
+    const q = query(collection(db, "users"));
+    getDocs(q).then(querySnapshot => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+      });
+    });
 
-  // const [rememberMe, setRememberMe] = useState(false);
+  }, []);
 
-  // const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const handleSubmitCreate = async () => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const userRef = doc(db, "users", user.uid);
+      let data = {
+        firstName: "jansi",
+        lastName: "hernandez",
+        id: user.uid,
+        email:user.email,
+      };
+      await setDoc(userRef, data, { merge: true });
+
+      // navigate
+
+    } catch (e) {
+      window.alert("Error al iniciar session", e.message);
+    }
+  };
+
+  const handleSubmitLogin = async () => {
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      if (user){
+
+      }
+    } catch (e) {
+      window.alert("Error al iniciar session", e.message);
+    }
+  };
+
+  const [rememberMe, setRememberMe] = React.useState(false);
+
+  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const addProduct = async () => {
+    const docRef = await addDoc(collection(db, "product"), {
+      price: 100,
+      name: "Lovelace",
+      born: 1815,
+    });
+  };
+
 
   return (
     <BasicLayout image={bgImage}>
@@ -89,19 +129,19 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput 
-                type="email" 
-                label="Email" 
+              <MDInput
+                type="email"
+                label="Email"
                 fullWidth
                 // value={email}
                 // onChange={({target}) => setEmail(target.value)}
               />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput 
-                type="password" 
-                label="Password" 
-                fullWidth 
+              <MDInput
+                type="password"
+                label="Password"
+                fullWidth
                 // value={password}
                 // onChange={({target}) => setPassword(target.value)}
               />
@@ -119,7 +159,7 @@ function Basic() {
               </MDTypography> */}
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton onClick={handleSubmitCreate} variant="gradient" color="info" fullWidth>
                 sign in
               </MDButton>
             </MDBox>
